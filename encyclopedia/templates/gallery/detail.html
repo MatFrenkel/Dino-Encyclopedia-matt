@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ dinosaur.name }} - Dino Encyclopedia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            {% if dinosaur.image %}
+            <img src="{{ dinosaur.image.url }}" class="img-fluid rounded shadow" alt="{{ dinosaur.name }}">
+            {% else %}
+            <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded shadow"
+                style="height: 400px;">
+                <i class="bi bi-hurricane" style="font-size: 10rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <h1 class="display-4">{{ dinosaur.name }}</h1>
+            <p class="lead text-muted fst-italic">{{ dinosaur.scientific_name }}</p>
+
+            <hr>
+
+            <div class="mb-3">
+                <h5><i class="bi bi-info-circle"></i> Basic Information</h5>
+                <table class="table table-borderless">
+                    <tr>
+                        <th>Period:</th>
+                        <td>{{ dinosaur.period }}</td>
+                    </tr>
+                    <tr>
+                        <th>Era:</th>
+                        <td>{{ dinosaur.period.get_era_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Diet:</th>
+                        <td>{{ dinosaur.get_diet_display }}</td>
+                    </tr>
+                    <tr>
+                        <th>Length:</th>
+                        <td>{{ dinosaur.length_meters }} meters</td>
+                    </tr>
+                    <tr>
+                        <th>Weight:</th>
+                        <td>{{ dinosaur.weight_kg }} kg</td>
+                    </tr>
+                    {% if dinosaur.discovered_year %}
+                    <tr>
+                        <th>Discovered:</th>
+                        <td>{{ dinosaur.discovered_year }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" name="collect" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Add to Collection
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3><i class="bi bi-file-text"></i> Description</h3>
+            <p class="fs-5">{{ dinosaur.description }}</p>
+
+            {% if dinosaur.fun_fact %}
+            <div class="alert alert-info">
+                <h5><i class="bi bi-lightbulb"></i> Fun Fact!</h5>
+                <p class="mb-0">{{ dinosaur.fun_fact }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="{% url 'gallery' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Gallery
+        </a>
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-house"></i> Home
+        </a>
+    </div>
+</div>
+{% endblock %}

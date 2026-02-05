@@ -1,0 +1,60 @@
+classDiagram
+
+class MainController {
+  +run()
+}
+
+class AuthController {
+  +login(email, password)
+  +logout()
+  +checkAuth()
+}
+
+class MapController {
+  +initializePeriods()
+  +setPage(page)
+  +getState()
+}
+
+class PuzzleaurusController {
+  +initialize()
+  +selectPuzzle(puzzleId)
+  +getState()
+  +subscribe(listener)
+}
+
+class MemodynController {
+  +startGame()
+  +checkMatch()
+  +getState()
+}
+
+class GalleryController {
+  +getDiscovered()
+  +filterByPeriod()
+}
+
+class ProfileController {
+  +updateProfile(data)
+  +getUserInfo()
+}
+
+class Config {
+  +apiUrl : string
+  +authToken : string
+}
+
+MainController --> AuthController
+MainController --> MapController
+MainController --> PuzzleaurusController
+MainController --> MemodynController
+MainController --> GalleryController
+MainController --> ProfileController
+
+AuthController --> Config
+MapController --> Config
+PuzzleaurusController --> Config
+MemodynController --> Config
+GalleryController --> Config
+ProfileController --> Config
+

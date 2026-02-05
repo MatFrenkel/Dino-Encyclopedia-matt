@@ -1,0 +1,22 @@
+stateDiagram-v2
+    [*] --> LoginView
+
+    LoginView --> HomeView : login exitoso
+
+    HomeView --> MapView : acceder a Mapa
+    HomeView --> GalleryView : acceder a Galería
+    HomeView --> LibraryView : acceder a Biblioteca
+    HomeView --> ProfileView : acceder a Perfil
+
+    MapView --> RoomView : seleccionar sala
+    RoomView --> PuzzleaurusView : iniciar Puzzleaurus
+
+
+    GalleryView --> HomeView : volver
+    LibraryView --> HomeView : volver
+    ProfileView --> HomeView : volver
+    RoomView --> MapView : volver
+    PuzzleaurusView --> HomeView : salir
+
+
+    HomeView --> LoginView : cerrar sesión

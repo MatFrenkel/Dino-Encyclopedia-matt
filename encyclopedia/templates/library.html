@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Library - Dino Encyclopedia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4"><i class="bi bi-book"></i> Educational Library</h1>
+    <p class="lead">Learn about dinosaurs and their geological periods</p>
+
+    <div class="row g-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3><i class="bi bi-clock-history"></i> The Mesozoic Era</h3>
+                </div>
+                <div class="card-body">
+                    <p class="fs-5">The Mesozoic Era, also known as the "Age of Reptiles," lasted from about 252 to 66
+                        million years ago. It is divided into three periods: the Triassic, Jurassic, and Cretaceous.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-3">
+        {% for period in periods %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div
+                    class="card-header {% if period.name == 'triassic' %}bg-danger{% elif period.name == 'jurassic' %}bg-success{% else %}bg-primary{% endif %} text-white">
+                    <h4>{{ period }}</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Timeframe:</strong> {{ period.start_mya }} - {{ period.end_mya }} million years ago</p>
+                    <p>{{ period.description }}</p>
+                    <a href="{% url 'gallery' %}?period={{ period.name }}" class="btn btn-outline-primary">
+                        <i class="bi bi-eye"></i> View Dinosaurs
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h3><i class="bi bi-info-circle"></i> Did You Know?</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled fs-5">
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Dinosaurs ruled the Earth for
+                            over 165 million years!</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> The largest dinosaur,
+                            Argentinosaurus, could weigh up to 100 tons.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> Birds are the living
+                            descendants of theropod dinosaurs.</li>
+                        <li class="mb-2"><i class="bi bi-check-circle text-success"></i> The name "dinosaur" means
+                            "terrible lizard" in Greek.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}

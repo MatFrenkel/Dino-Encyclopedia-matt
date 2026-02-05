@@ -1,0 +1,399 @@
+sequenceDiagram
+    %% Participantes globales
+    participant UserSessionModel
+    participant AuthService
+    participant AuthContextService
+    participant MapModel
+    participant LandingPageModel
+    participant TipsModel
+    participant PuzzleaurusModel
+    participant AlbumModel
+    participant MemodynModel
+
+
+    autonumber
+
+    %% ──────────────────────────────────────────────
+    opt Login exitoso
+        UserSessionModel ->> AuthService: login(email, password)
+        activate AuthService
+        AuthService ->> AuthContextService: saveSession(sessionData)
+        activate AuthContextService 
+        deactivate AuthContextService
+        AuthService ->> UserSessionModel: setState(sessionData)
+        deactivate AuthService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Login fallido
+        UserSessionModel ->> AuthService: login(email, password)
+        activate AuthService
+        AuthService -->> UserSessionModel: setState(null)
+        deactivate AuthService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Registro exitoso
+        UserSessionModel ->> AuthService: register(formData)
+        activate AuthService
+        AuthService ->> AuthContextService: saveSession(sessionData)
+        activate AuthContextService
+        deactivate AuthContextService
+        AuthService ->> UserSessionModel: setState(sessionData)
+        deactivate AuthService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Registro duplicado
+        UserSessionModel ->> AuthService: register(formData)
+        activate AuthService
+        AuthService -->> UserSessionModel: setState(null)
+        deactivate AuthService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Login como invitado
+        UserSessionModel ->> AuthService: loginAsGuest()
+        activate AuthService
+        AuthService ->> AuthContextService: saveSession(guestSession)
+        activate AuthContextService
+        deactivate AuthContextService
+        AuthService ->> UserSessionModel: setState(guestSession)
+        deactivate AuthService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Logout
+        UserSessionModel ->> AuthContextService: clearSession()
+        activate AuthContextService
+        AuthContextService ->> AuthContextService: deleteCookie()
+        AuthContextService ->> UserSessionModel: setState(null)
+        deactivate AuthContextService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Validar / refresh de sesión
+        UserSessionModel ->> AuthContextService: getCookie()
+        activate AuthContextService
+        AuthContextService ->> AuthService: checkSession(token)
+        activate AuthService
+        AuthService -->> AuthContextService: sessionData | null
+        deactivate AuthService
+        AuthContextService ->> UserSessionModel: setState(sessionData | null)
+        deactivate AuthContextService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Autologin desde cookie
+        UserSessionModel ->> AuthContextService: initializeFromCookie()
+        activate AuthContextService
+        AuthContextService ->> AuthContextService: getCookie()
+        AuthContextService ->> AuthService: checkSession(cookieToken)
+        activate AuthService
+        AuthService -->> AuthContextService: sessionData
+        deactivate AuthService
+        AuthContextService ->> UserSessionModel: setState(sessionData)
+        deactivate AuthContextService
+    end
+
+    %% ──────────────────────────────────────────────
+    opt Limpiar flag de registro exitoso
+        UserSessionModel ->> AuthService: clearRegistrationSuccess()
+        activate AuthService
+        AuthService -->> UserSessionModel: 
+        deactivate AuthService
+    end
+     %% ──────────────────────────────────────────────
+    opt M1 – Cargar mapa inicial
+        UserSessionModel ->> MapModel: initializePeriods()
+        activate MapModel
+        UserSessionModel ->> MapModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M2 – Seleccionar era geológica
+        UserSessionModel ->> MapModel: getState()
+        activate MapModel
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M3 – Seleccionar subperiodo
+        UserSessionModel ->> MapModel: getState()
+        activate MapModel
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M4 – Resaltar dinosaurio en mapa
+        UserSessionModel ->> MapModel: getState()
+        activate MapModel
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M5 – Abrir habitación/room en mapa
+        UserSessionModel ->> MapModel: getState()
+        activate MapModel
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M6 – Mostrar progreso del álbum en mapa
+        UserSessionModel ->> MapModel: subscribe(albumProgressListener)
+        activate MapModel
+        UserSessionModel ->> MapModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M7 – Sincronizar estado de mapa con progreso
+        UserSessionModel ->> MapModel: subscribe(syncListener)
+    end
+
+    %% ──────────────────────────────────────────────
+    opt M8 – Refrescar mapa tras minijuego
+        UserSessionModel ->> MapModel: getState()
+        activate MapModel
+        UserSessionModel ->> UserSessionModel: setState(MapState)
+        deactivate MapModel
+    end
+    %% ──────────────────────────────────────────────
+    opt L1 – Cargar landing page inicial
+        UserSessionModel ->> LandingPageModel: getState()
+        activate LandingPageModel
+        UserSessionModel ->> UserSessionModel: setState(LandingPageState)
+        deactivate LandingPageModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L2 – Suscribirse a actualizaciones
+        UserSessionModel ->> LandingPageModel: subscribe(initListener)
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L3 – Obtener estado al volver de otra sección
+        UserSessionModel ->> LandingPageModel: getState()
+        activate LandingPageModel
+        UserSessionModel ->> UserSessionModel: setState(LandingPageState)
+        deactivate LandingPageModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L4 – Sincronizar landing con progreso
+        UserSessionModel ->> LandingPageModel: subscribe(progressListener)
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L5 – Refrescar banner destacado
+        UserSessionModel ->> LandingPageModel: getState()
+        activate LandingPageModel
+        UserSessionModel ->> UserSessionModel: setState(LandingPageState)
+        deactivate LandingPageModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L6 – Mostrar avisos/eventos en tiempo real
+        UserSessionModel ->> LandingPageModel: subscribe(eventListener)
+    end
+
+    %% ──────────────────────────────────────────────
+    opt L7 – Recuperar estado tras logout/login
+        UserSessionModel ->> LandingPageModel: getState()
+        activate LandingPageModel
+        UserSessionModel ->> UserSessionModel: setState(LandingPageState)
+        deactivate LandingPageModel
+    end
+        %% ──────────────────────────────────────────────
+    opt T1 – Inicializar módulo de tips
+        UserSessionModel ->> TipsModel: initialize()
+        activate TipsModel
+        UserSessionModel ->> TipsModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(TipsState)
+        deactivate TipsModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt T2 – Obtener estado de tips
+        UserSessionModel ->> TipsModel: getState()
+        activate TipsModel
+        UserSessionModel ->> UserSessionModel: setState(TipsState)
+        deactivate TipsModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt T3 – Alternar tips de Memodyn
+        UserSessionModel ->> TipsModel: toggleMemodynTipsEnabled()
+        activate TipsModel
+        UserSessionModel ->> TipsModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(TipsState)
+        deactivate TipsModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt T4 – Alternar tips de Puzzleaurus
+        UserSessionModel ->> TipsModel: togglePuzzleaurusTipsEnabled()
+        activate TipsModel
+        UserSessionModel ->> TipsModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(TipsState)
+        deactivate TipsModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt T5 – Suscribirse a cambios de tips
+        UserSessionModel ->> TipsModel: subscribe(tipsListener)
+    end
+        %% ──────────────────────────────────────────────
+    opt P1 – Inicializar minijuego
+        UserSessionModel ->> PuzzleaurusModel: initialize()
+        activate PuzzleaurusModel
+        UserSessionModel ->> PuzzleaurusModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(PuzzleaurusState)
+        deactivate PuzzleaurusModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt P2 – Seleccionar puzzle
+        UserSessionModel ->> PuzzleaurusModel: selectPuzzle(puzzleId)
+        activate PuzzleaurusModel
+        UserSessionModel ->> PuzzleaurusModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(PuzzleaurusState)
+        deactivate PuzzleaurusModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt P3 – Continuar puzzle
+        UserSessionModel ->> PuzzleaurusModel: continue()
+        activate PuzzleaurusModel
+        UserSessionModel ->> PuzzleaurusModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(PuzzleaurusState)
+        deactivate PuzzleaurusModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt P4 – Volver al menú principal
+        UserSessionModel ->> PuzzleaurusModel: returnToMenu()
+        activate PuzzleaurusModel
+        UserSessionModel ->> PuzzleaurusModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(PuzzleaurusState)
+        deactivate PuzzleaurusModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt P5 – Obtener estado del puzzle
+        UserSessionModel ->> PuzzleaurusModel: getState()
+        activate PuzzleaurusModel
+        UserSessionModel ->> UserSessionModel: setState(PuzzleaurusState)
+        deactivate PuzzleaurusModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt P6 – Suscribirse a cambios
+        UserSessionModel ->> PuzzleaurusModel: subscribe(puzzleListener)
+    end
+        %% ──────────────────────────────────────────────
+    opt A1 – Abrir álbum inicial
+        UserSessionModel ->> AlbumModel: getState()
+        activate AlbumModel
+        UserSessionModel ->> UserSessionModel: setState(AlbumState)
+        deactivate AlbumModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt A2 – Navegar a la página siguiente
+        UserSessionModel ->> AlbumModel: nextStickerPage()
+        activate AlbumModel
+        UserSessionModel ->> AlbumModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(AlbumState)
+        deactivate AlbumModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt A3 – Navegar a la página anterior
+        UserSessionModel ->> AlbumModel: previousStickerPage()
+        activate AlbumModel
+        UserSessionModel ->> AlbumModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(AlbumState)
+        deactivate AlbumModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt A4 – Navegar a una página específica
+        UserSessionModel ->> AlbumModel: navigateToPage(pageNumber)
+        activate AlbumModel
+        UserSessionModel ->> AlbumModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(AlbumState)
+        deactivate AlbumModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt A5 – Arrastrar y soltar sticker
+        UserSessionModel ->> AlbumModel: setDraggingSticker(stickerId)
+        activate AlbumModel
+        UserSessionModel ->> AlbumModel: setMousePosition(x, y)
+        UserSessionModel ->> AlbumModel: isSlotAvailable(slotId)
+        UserSessionModel ->> AlbumModel: putStickerOnSlot(slotId, stickerId)
+        UserSessionModel ->> AlbumModel: stopDraggingSticker()
+        UserSessionModel ->> AlbumModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(AlbumState)
+        deactivate AlbumModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt A6 – Suscribirse a cambios del álbum
+        UserSessionModel ->> AlbumModel: subscribe(albumListener)
+    end
+     %% ──────────────────────────────────────────────
+    opt MDM1 – Inicializar módulo Memodyn
+        UserSessionModel ->> MemodynModel: initialize()
+        activate MemodynModel
+        UserSessionModel ->> MemodynModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(MemodynState)
+        deactivate MemodynModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt MDM2 – Comenzar partida (estado inicial)
+        UserSessionModel ->> MemodynModel: initialize()
+        activate MemodynModel
+        UserSessionModel ->> MemodynModel: getState()
+        UserSessionModel ->> UserSessionModel: setState(MemodynState)
+        deactivate MemodynModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt MDM3 – Seleccionar carta / Voltear carta
+        UserSessionModel ->> MemodynModel: getState()
+        activate MemodynModel
+        UserSessionModel ->> UserSessionModel: setState(MemodynState)
+        deactivate MemodynModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt MDM4 – Volver al menú principal
+        UserSessionModel ->> MemodynModel: getState()
+        activate MemodynModel
+        UserSessionModel ->> UserSessionModel: setState(MemodynState)
+        deactivate MemodynModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt MDM5 – Obtener estado actual
+        UserSessionModel ->> MemodynModel: getState()
+        activate MemodynModel
+        UserSessionModel ->> UserSessionModel: setState(MemodynState)
+        deactivate MemodynModel
+    end
+
+    %% ──────────────────────────────────────────────
+    opt MDM6 – Suscribirse a cambios del juego
+        UserSessionModel ->> MemodynModel: subscribe(memodynListener)
+    end
+

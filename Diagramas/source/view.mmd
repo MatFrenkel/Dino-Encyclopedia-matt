@@ -1,0 +1,47 @@
+classDiagram
+
+class LoginPage {
+  +render()
+  +handleLogin()
+}
+
+class HomeView {
+  +renderBotones()
+  +goTo(view)
+}
+
+class MapView {
+  +renderMapa()
+  +handleClickSala()
+}
+
+class GalleryView {
+  +renderDinos()
+  +handleFilter()
+}
+
+class LibraryView {
+  +renderContenido()
+  +buscarContenido()
+}
+
+class ProfileView {
+  +renderPerfil()
+  +guardarCambios()
+}
+
+class PuzzleaurusView {
+  +renderPuzzle()
+  +validarMovimiento()
+  +submit()
+}
+
+
+
+LoginPage --> HomeView : redirige
+HomeView --> MapView
+HomeView --> GalleryView
+HomeView --> LibraryView
+HomeView --> ProfileView
+MapView --> PuzzleaurusView
+

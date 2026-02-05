@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Geological Map - Dino Encyclopedia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4"><i class="bi bi-map"></i> Geological Periods Map</h1>
+    <p class="lead">Explore different geological periods of the Mesozoic Era</p>
+
+    <div class="row g-4">
+        {% for item in map_data %}
+        <div class="col-md-4">
+            <div class="card period-card h-100 shadow-sm">
+                <div
+                    class="card-header text-white {% if item.period.name == 'triassic' %}bg-danger{% elif item.period.name == 'jurassic' %}bg-success{% else %}bg-primary{% endif %}">
+                    <h3 class="mb-0">{{ item.period }}</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Era:</strong> {{ item.period.get_era_display }}</p>
+                    <p><strong>Period:</strong> {{ item.period.start_mya }} - {{ item.period.end_mya }} MYA</p>
+                    <p class="card-text">{{ item.period.description|truncatewords:30 }}</p>
+                    <hr>
+                    <p class="mb-0">
+                        <i class="bi bi-hurricane"></i> <strong>{{ item.dinosaur_count }}</strong> dinosaurs discovered
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'gallery' %}?period={{ item.period.name }}" class="btn btn-outline-primary w-100">
+                        <i class="bi bi-eye"></i> View Dinosaurs
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .period-card {
+        transition: transform 0.3s;
+    }
+
+    .period-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
