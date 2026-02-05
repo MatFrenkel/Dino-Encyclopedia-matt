@@ -4,7 +4,7 @@ A Django MVC web application for exploring dinosaurs and geological periods. Bui
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![Django](https://img.shields.io/badge/Django-5.0-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![License](https://img.shields.io/badge/License-Educational%20Use%20Only-lightgrey)
 
 ---
 
@@ -26,7 +26,7 @@ A Django MVC web application for exploring dinosaurs and geological periods. Bui
 
 ## 🏗️ Architecture: MVC Pattern
 
-This project follows the **MVC (Model-View-Controller)** pattern. Django calls it MVT (Model-View-Template), but the mapping is:
+This project follows the **MVC (Model-View-Controller)** pattern. Django internally follows the MVT (Model-View-Template) pattern, which maps cleanly to the classical MVC responsibilities as follows:
 
 | Classical MVC | Django Implementation | Location |
 |---------------|----------------------|----------|
@@ -39,19 +39,19 @@ For detailed architecture documentation, see [docs/ARCHITECTURE.md](docs/ARCHITE
 ### Architecture Diagrams
 
 #### View Layer (Pages/Screens)
-![View Diagram](docs/diagrams/rendered/view.svg.svg)
+![View Diagram](docs/diagrams/rendered/view.svg)
 
 #### Controller Layer (Business Logic)
-![Controller Diagram](docs/diagrams/rendered/controller.svg.svg)
+![Controller Diagram](docs/diagrams/rendered/controller.svg)
 
 #### State Transitions (Navigation Flow)
-![Transition Diagram](docs/diagrams/rendered/transicion.svg.svg)
+![Transition Diagram](docs/diagrams/rendered/transicion.svg)
 
 #### Conceptual Model (Domain Interactions)
-![Conceptual Diagram](docs/diagrams/rendered/conceptual.svg.svg)
+![Conceptual Diagram](docs/diagrams/rendered/conceptual.svg)
 
 #### Login Sequence (Authentication Flow)
-![Login Sequence](docs/diagrams/rendered/secuencia_login.svg.svg)
+![Login Sequence](docs/diagrams/rendered/secuencia_login.svg)
 
 ---
 
@@ -59,7 +59,7 @@ For detailed architecture documentation, see [docs/ARCHITECTURE.md](docs/ARCHITE
 
 ### Prerequisites
 
-- Python 3.11 or higher
+- Python 3.12 or higher
 - pip (Python package manager)
 - Virtual environment (recommended)
 
@@ -67,7 +67,7 @@ For detailed architecture documentation, see [docs/ARCHITECTURE.md](docs/ARCHITE
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/lichdencor/Dino-Encyclopedia.git
+   git clone https://github.com/MatFrenkel/Dino-Encyclopedia-matt.git
    cd Dino-Encyclopedia-matt
    ```
 
