@@ -1,3 +1,4 @@
+<!-- FIXED TEMPLATE SYNTAX -->
 {% extends 'base.html' %}
 {% load static %}
 
@@ -21,7 +22,7 @@
                     <select name="period" class="form-select">
                         <option value="">All Periods</option>
                         {% for period in periods %}
-                        <option value="{{ period.name }}" {% if current_period==period.name %}selected{% endif %}>
+                        <option value="{{ period.name }}" {% if current_period == period.name %}selected{% endif %}>
                             {{ period }}
                         </option>
                         {% endfor %}
@@ -31,11 +32,11 @@
                     <label class="form-label">Diet</label>
                     <select name="diet" class="form-select">
                         <option value="">All Diets</option>
-                        <option value="herbivore" {% if current_diet=='herbivore' %}selected{% endif %}>Herbivore
+                        <option value="herbivore" {% if current_diet == 'herbivore' %}selected{% endif %}>Herbivore
                         </option>
-                        <option value="carnivore" {% if current_diet=='carnivore' %}selected{% endif %}>Carnivore
+                        <option value="carnivore" {% if current_diet == 'carnivore' %}selected{% endif %}>Carnivore
                         </option>
-                        <option value="omnivore" {% if current_diet=='omnivore' %}selected{% endif %}>Omnivore</option>
+                        <option value="omnivore" {% if current_diet == 'omnivore' %}selected{% endif %}>Omnivore</option>
                     </select>
                 </div>
                 <div class="col-md-2 d-flex align-items-end">

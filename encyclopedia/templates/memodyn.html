@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Memodyn - Dino Encyclopedia{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4"><i class="bi bi-grid-3x3-gap"></i> Memodyn</h1>
+    <p class="lead">Test your memory by matching dinosaur pairs</p>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">Memory Game</h3>
+                </div>
+                <div class="card-body text-center" style="min-height: 400px;">
+                    <div class="game-container mt-4">
+                        <i class="bi bi-patch-question display-1 text-success mb-4"></i>
+                        <h4>Dino Memory Match</h4>
+                        <p class="text-muted">Memory game functionality placeholder</p>
+
+                        <div class="mt-4">
+                            <button class="btn btn-lg btn-success" onclick="startGame()">
+                                <i class="bi bi-play-circle"></i> Start Game
+                            </button>
+                        </div>
+
+                        <div id="game-area" class="mt-4 d-none">
+                            <div class="alert alert-success">
+                                <h5>Game Demo</h5>
+                                <p>Click Finish Game to earn points!</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="completeGame()">
+                                <i class="bi bi-check-circle"></i> Finish Game
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-info text-white">
+                    <h4><i class="bi bi-trophy"></i> High Scores</h4>
+                </div>
+                <div class="card-body">
+                    {% if high_scores %}
+                    <ol class="list-group list-group-numbered">
+                        {% for score in high_scores %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{ score.score }} points</div>
+                                {{ score.completed_at|date:"M d" }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                    {% else %}
+                    <p class="text-muted">No scores yet!</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5><i class="bi bi-info-circle"></i> How to Play</h5>
+                    <ol>
+                        <li>Click "Start Game"</li>
+                        <li>Find all matching pairs of dinosaurs</li>
+                        <li>Complete the board as quickly as possible</li>
+                        <li>Earn tokens for each victory</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <a href="{% url 'home' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Home
+        </a>
+    </div>
+
+    <!-- Hidden form for score submission -->
+    <form method="post" id="score-form" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="score" id="score-input">
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function startGame() {
+        document.getElementById('game-area').classList.remove('d-none');
+    }
+
+    function completeGame() {
+        const score = Math.floor(Math.random() * 400) + 50;
+        document.getElementById('score-input').value = score;
+        document.getElementById('score-form').submit();
+    }
+</script>
+{% endblock %}

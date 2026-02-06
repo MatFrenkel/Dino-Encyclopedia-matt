@@ -112,6 +112,9 @@ def map_view(request):
     """Map view controller showing geological periods"""
     map_data = services.get_map_data()
     
+    # Ensure profile exists for the nav bar
+    services.get_or_create_user_profile(request.user)
+    
     context = {
         'map_data': map_data,
         'periods': Period.objects.all()
@@ -139,6 +142,9 @@ def gallery_list_view(request):
     else:
         dinosaurs = services.get_dinosaurs_by_period()
     
+    # Ensure profile exists for the nav bar
+    services.get_or_create_user_profile(request.user)
+    
     periods = Period.objects.all()
     
     context = {
@@ -162,6 +168,9 @@ def dinosaur_detail_view(request, dinosaur_id):
         messages.success(request, f'{dinosaur.name} added to your collection!')
         return redirect('dinosaur_detail', dinosaur_id=dinosaur_id)
     
+    # Ensure profile exists
+    services.get_or_create_user_profile(request.user)
+    
     context = {
         'dinosaur': dinosaur,
     }
@@ -173,6 +182,9 @@ def dinosaur_detail_view(request, dinosaur_id):
 @login_required
 def library_view(request):
     """Library/educational content controller"""
+    # Ensure profile exists
+    services.get_or_create_user_profile(request.user)
+    
     periods = Period.objects.all()
     
     context = {
@@ -232,6 +244,9 @@ def puzzleaurus_view(request):
     
     high_scores = services.get_user_high_scores(request.user, 'puzzleaurus')
     
+    # Ensure profile exists
+    services.get_or_create_user_profile(request.user)
+    
     context = {
         'high_scores': high_scores,
     }
@@ -248,6 +263,9 @@ def memodyn_view(request):
         return redirect('home')
     
     high_scores = services.get_user_high_scores(request.user, 'memodyn')
+    
+    # Ensure profile exists
+    services.get_or_create_user_profile(request.user)
     
     context = {
         'high_scores': high_scores,
